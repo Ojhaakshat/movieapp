@@ -67,6 +67,39 @@ overflow: hidden;
 margin-right: 5vw;
 }
 
+
+.movies-list{
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1rem;
+  justify-content: center;
+}
+
+.movies-card{
+  width: 20vw;
+  margin: 1rem;
+  color: white;
+  position: relative;
+}
+
+.movies-title{
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  font-size: larger;
+}
+
+.movies-button{
+  position: absolute;
+  bottom: 2rem;
+}
+/* style={{height:'40vh',width:'20vw'}} */
+.movies-img{
+  height: 40vh;
+  width: 20vw;
+}
+
+
 @media screen and (max-width:400px){
   .poster-card{
     height:30vh;
@@ -81,5 +114,15 @@ margin-right: 5vw;
   .poster-text{
     top: 17vh;
     left: 5vw;
+  }
+  .movies-card{
+    width: 40vw;
+    margin: 0.1rem;
+  }
+  .movies-button{
+    width: 80%;
+  }
+  .movies-img{
+    width: 40vw;
   }
 }

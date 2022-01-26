@@ -98,7 +98,12 @@ margin-right: 5vw;
   height: 40vh;
   width: 20vw;
 }
-
+.favourite-genres{
+  padding: 3rem;
+}
+.favourite-list {
+  padding: 3rem;
+}
 
 @media screen and (max-width:400px){
   .poster-card{

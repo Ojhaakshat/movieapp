@@ -8,7 +8,8 @@ export default class Movies extends Component {
             hover: '',
             page_arr: [1],
             currentPage: 1,
-            movies: []
+            movies: [],
+            favourites: []
         }
     }
     async componentDidMount() {
@@ -56,6 +57,25 @@ export default class Movies extends Component {
             }, this.changeMovies)   
         }
     }
+
+    handleFavourites = (movie) => {
+        let oldData = JSON.parse(localStorage.getItem('movies') || "[]")
+        if(this.state.favourites.includes(movie.id)) {
+            oldData = oldData.filter((ele) => (
+                ele.id != movie.id
+            )) 
+        } else {
+            oldData.push(movie)
+        }
+        localStorage.setItem('movies', JSON.stringify(oldData));
+        console.log(oldData);
+        // setItem function is synchronus hence we do no need to give  as callback here
+        let temp = oldData.map((ele) => ele.id);
+        this.setState({
+            favourites: [...temp]
+        })
+    }
+
     render() {
         // let movie = movies.results;
         // console.log("Render done");
@@ -78,7 +98,9 @@ export default class Movies extends Component {
                                         <div className="button-wrapper" style={{display:'flex',width:'100%',justifyContent:'center'}}>
 
                                             {
-                                                this.state.hover == ele.id && <a className='btn btn-primary movies-button'>Add to Fav</a>
+                                                this.state.hover == ele.id && 
+                                                <a className='btn btn-primary movies-button' onClick={() => this.handleFavourites(ele)}>
+                                                {this.state.favourites.includes(ele.id)?"Remove from favourites":"Add to favourites"}</a>
                                             }
                                         </div>
                                     </div>

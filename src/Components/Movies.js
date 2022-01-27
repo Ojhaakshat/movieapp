@@ -22,7 +22,7 @@ export default class Movies extends Component {
         // console.log("Mounting done");
     }
     changeMovies = async ()=> {
-        const res = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=c601404f39cfa24cd4b4a50dd0491459&page=${this.state.currentPage}`);
+        const res = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=c601404f39cfa24cd4b4a50dd0491459&language=en-US&&page=${this.state.currentPage}`);
         this.setState({
             movies: [...res.data.results]
         })
@@ -83,8 +83,8 @@ export default class Movies extends Component {
             <>
                 {
                     this.state.movies.length == 0?
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Loading...</span>
                     </div>:
                     <div>
                         <h3 className='text-center'><strong>Trending</strong></h3>

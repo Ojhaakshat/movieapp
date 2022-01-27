@@ -8,7 +8,9 @@ export default class Favourite extends Component {
             genres: [],
             current_genre: 'All Genres',
             movies: [],
-            currentText: ''
+            currentText: '',
+            current_page: 1,
+            limit: 3
         }
     }
     componentDidMount() {
@@ -37,6 +39,61 @@ export default class Favourite extends Component {
             current_genre: Genre
         })
     }
+
+    sortPopularityDesc = () => {
+        let temp = this.state.movies;
+        temp.sort(function(a, b) {
+            return b.popularity - a.popularity;
+        })
+        this.setState({
+            movies: [...temp]
+        })
+    }
+
+    sortPopularityInc = () => {
+        let temp = this.state.movies;
+        temp.sort(function(a, b) {
+            return a.popularity - b.popularity;
+        })
+        this.setState({
+            movies: [...temp]
+        })
+    }
+
+    sortRatingDesc = () => {
+        let temp = this.state.movies;
+        temp.sort(function(a, b) {
+            return b.vote_average - a.vote_average;
+        })
+        this.setState({
+            movies: [...temp]
+        })
+    }
+
+    sortRatingInc = () => {
+        let temp = this.state.movies;
+        temp.sort(function(a, b) {
+            return a.vote_average - b.vote_average;
+        })
+        this.setState({
+            movies: [...temp]
+        })
+    }
+
+    handlePagechange =  page => {
+        this.setState({
+            current_page: page
+        })
+    }
+
+    handleDelete = id => {
+        let temparr = []
+        temparr = this.state.movies.filter((ele) => ele.id != id)
+        this.setState({
+            movies: [...temparr]
+        })
+        localStorage.setItem('movies', JSON.stringify(temparr))
+    }
     render() {
         // const movie = movies.results;
         // console.log(movie);
@@ -55,11 +112,22 @@ export default class Favourite extends Component {
         filter_arr = filter_arr.filter((ele) => (
             ele.original_title.toLowerCase().includes(this.state.currentText.toLowerCase())
         ))
+
+        let pages = Math.ceil(filter_arr.length/this.state.limit);
+        let pages_arr = [];
+        for(let i = 1; i <= pages; i++){
+            pages_arr.push(i);
+        } 
+
+        let si = (this.state.current_page - 1)*this.state.limit;
+        let ei = si + this.state.limit;
+        filter_arr =  filter_arr.slice(si, ei);
+
         return <div>
             <>
                 <div className='main'>
                     <div className='row'>
-                        <div className='col-3 favourite-genres'>
+                        <div className='col-12  col-lg-3 favourite-genres'>
                             <ul className="list-group">
                                 {
                                     this.state.genres.map((ele) => (
@@ -71,10 +139,10 @@ export default class Favourite extends Component {
                                 
                             </ul>
                         </div>
-                        <div className='col-9 favourite-list'>
+                        <div className='col-12 col-lg-9 favourite-list'>
                             <div className='row'>
                                 <input type="text" className='input-group-text col' value={this.state.currentText} onChange={(e)=>this.setState({currentText : e.target.value})} placeholder='Search'/>
-                                <input type="number" className='input-group-text col'/>
+                                <input type="number" className='input-group-text col' value={this.state.limit} onChange={(e)=>this.setState({limit:e.target.value})} placeholder='Limit'/>
                             </div>
                             <div className='row'>
                                 <table className="table">
@@ -82,8 +150,8 @@ export default class Favourite extends Component {
                                         <tr>
                                         <th scope="col">Title</th>
                                         <th scope="col">Genre</th>
-                                        <th scope="col">Popularity</th>
-                                        <th scope="col">Rating</th>
+                                        <th scope="col"><i className="fas fa-sort-up" onClick={this.sortPopularityDesc}></i>Popularity<i className="fas fa-sort-down" onClick={this.sortPopularityInc}></i></th>
+                                        <th scope="col"><i className="fas fa-sort-up" onClick={this.sortRatingDesc}></i>Rating<i className="fas fa-sort-down" onClick={this.sortRatingInc}></i></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -94,7 +162,7 @@ export default class Favourite extends Component {
                                                     <td>{genreids[ele.genre_ids[0]]}</td>
                                                     <td>{ele.popularity}</td>
                                                     <td>{ele.vote_average}</td>
-                                                    <td><button type="button" className="btn btn-danger">Danger</button></td>
+                                                    <td><button type="button" className="btn btn-danger" onClick={()=>this.handleDelete(ele.id)}> Remove</button></td>
                                                 </tr>
                                             ))
                                         }
@@ -103,11 +171,12 @@ export default class Favourite extends Component {
                             </div>
                             <nav aria-label="Page navigation example">
                                 <ul className="pagination">
-                                    <li className="page-item"><a className="page-link" href="#">Previous</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">1</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">3</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">Next</a></li>
+                                    {/* <li className="page-item"><a className="page-link" href="#">Previous</a></li> */}
+                                    {
+                                        pages_arr.map((ele) => (
+                                            <li className="page-item"><a className="page-link" onClick={() => this.handlePagechange(ele)}>{ele}</a></li>
+                                        ))
+                                    }
                                 </ul>
                             </nav>
                         </div>

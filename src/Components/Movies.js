@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { movies } from './getMovies';
+// import { movies } from './getMovies';
 import axios from 'axios';
 export default class Movies extends Component {
     constructor() {
@@ -16,8 +16,10 @@ export default class Movies extends Component {
         //sideffects
         const res = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=c601404f39cfa24cd4b4a50dd0491459&page=${this.state.currentPage}`);
         // console.log(res);
+        const favourites = JSON.parse(localStorage.getItem('movies') || "[]");
         this.setState({
-            movies: [...res.data.results]
+            movies: [...res.data.results],
+            favourites: favourites.map(ele => ele.id)
         })
         // console.log("Mounting done");
     }
@@ -71,6 +73,8 @@ export default class Movies extends Component {
         console.log(oldData);
         // setItem function is synchronus hence we do no need to give  as callback here
         let temp = oldData.map((ele) => ele.id);
+        oldData = [...temp]
+        
         this.setState({
             favourites: [...temp]
         })
@@ -82,6 +86,10 @@ export default class Movies extends Component {
         return (
             <>
                 {
+                    console.log(this.state.favourites)
+                }
+                {
+                    
                     this.state.movies.length == 0?
                     <div className="spinner-border text-primary" role="status">
                         <span className="visually-hidden">Loading...</span>
